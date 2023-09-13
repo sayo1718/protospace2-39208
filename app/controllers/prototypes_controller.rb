@@ -3,13 +3,8 @@ class PrototypesController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :contributor_confirmation, only: [:edit, :update, :destroy]
 
-
   def index
-    @prototypes = Prototype.all
-  end
-
-  def prototypes
-    @prototype = Prototype.all
+    @prototypes = Prototype.includes(:user)
   end
 
   def new
@@ -17,8 +12,9 @@ class PrototypesController < ApplicationController
   end
 
   def create
-    if Prototype.create(prototype_params)
-       redirect_to root_path
+    @prototype = Prototype.new(prototype_params)
+    if @prototype.save
+      redirect_to root_path
     else
       render :new
     end
@@ -30,7 +26,6 @@ class PrototypesController < ApplicationController
   end
 
   def edit
-    redirect_to root_path unless current_user == @prototype.user
   end
 
   def update
@@ -49,8 +44,8 @@ class PrototypesController < ApplicationController
     end
   end
 
-  
   private
+
   def prototype_params
     params.require(:prototype).permit(:title, :catch_copy, :concept, :image).merge(user_id: current_user.id)
   end
