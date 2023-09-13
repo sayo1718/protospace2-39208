@@ -15,6 +15,7 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
   password:
+  host: localhost
   socket: /tmp/mysql.sock
 
 development:
@@ -49,6 +50,7 @@ test:
 #
 production:
   <<: *default
+  adapter: postgresql
   database: protospace2_39208_production
   username: protospace2_39208
   password: <%= ENV['PROTOSPACE2_39208_DATABASE_PASSWORD'] %>
